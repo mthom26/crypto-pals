@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use crate::{from_hex, into_hex, xor, xor_single_byte};
+    use crate::{from_hex, into_hex, score::get_score, xor, xor_single_byte};
     use base64::encode;
     use std::str;
 
@@ -44,6 +44,47 @@ mod tests {
             }
         }
 
+        assert!(true);
+    }
+
+    #[test]
+    fn challenge_04() {
+        let text = include_str!("../resources/4.txt");
+
+        let mut high_line_score = 0.0;
+        let mut high_line_byte = 0;
+        let mut line_num = 0;
+
+        for (index, line) in text.split("\n").enumerate() {
+            println!("{} - {}", index, line);
+            let mut high_score = 0.0;
+            let mut high_byte = 0;
+            let bytes = from_hex(line);
+
+            for i in 0..255 {
+                let xor = xor_single_byte(bytes.clone(), i);
+                let score = get_score(xor);
+                if score > high_score {
+                    high_score = score;
+                    high_byte = i;
+                }
+            }
+
+            if high_score > high_line_score {
+                high_line_score = high_score;
+                high_line_byte = high_byte;
+                line_num = index;
+            }
+        }
+
+        // TODO - Properly xor the correct line with the correct byte without
+        //        just printing and copying the result.
+        println!("{} - {} - {}", high_line_score, high_line_byte, line_num);
+
+        let a = from_hex("7b5a4215415d544115415d5015455447414c155c46155f4058455c5b523f");
+        let xor = xor_single_byte(a, 53);
+        let b = str::from_utf8(&xor).unwrap();
+        println!("{}", b);
         assert!(true);
     }
 }
