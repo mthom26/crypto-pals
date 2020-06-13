@@ -39,3 +39,15 @@ pub fn xor_single_byte(bytes: Vec<u8>, key: u8) -> Vec<u8> {
 
     output
 }
+
+pub fn xor_repeating(bytes: &[u8], key: Vec<u8>) -> Vec<u8> {
+    let mut output = Vec::new();
+    let length = key.len();
+
+    for (i, byte) in bytes.iter().enumerate() {
+        let key_byte = i % length;
+        output.push(byte ^ key[key_byte]);
+    }
+
+    output
+}
