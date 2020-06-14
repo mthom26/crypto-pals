@@ -46,3 +46,24 @@ pub fn xor_repeating(bytes: &[u8], key: &[u8]) -> Vec<u8> {
 
     output
 }
+
+pub fn hamming_distance(a: &[u8], b: &[u8]) -> u32 {
+    let diff = a.iter().zip(b.iter()).fold(0, |acc, (elem_a, elem_b)| {
+        acc + (elem_a ^ elem_b).count_ones()
+    });
+
+    diff
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::utils::hamming_distance;
+
+    #[test]
+    fn hamming() {
+        let a = "this is a test".as_bytes();
+        let b = "wokka wokka!!!".as_bytes();
+
+        assert_eq!(hamming_distance(a, b), 37);
+    }
+}
