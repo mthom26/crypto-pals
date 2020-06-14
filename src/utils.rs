@@ -1,8 +1,3 @@
-mod score;
-mod set_1;
-
-fn main() {}
-
 pub fn from_hex(hex_string: &str) -> Vec<u8> {
     let mut bytes = Vec::new();
 
@@ -15,12 +10,12 @@ pub fn from_hex(hex_string: &str) -> Vec<u8> {
     bytes
 }
 
-pub fn into_hex(bytes: Vec<u8>) -> String {
+pub fn into_hex(bytes: &[u8]) -> String {
     let hexes: Vec<String> = bytes.iter().map(|byte| format!("{:02x}", byte)).collect();
     hexes.join("")
 }
 
-pub fn xor(a: Vec<u8>, b: Vec<u8>) -> Vec<u8> {
+pub fn xor(a: &[u8], b: &[u8]) -> Vec<u8> {
     let mut output = Vec::new();
 
     for (a_byte, b_byte) in a.iter().zip(b.iter()) {
@@ -30,7 +25,7 @@ pub fn xor(a: Vec<u8>, b: Vec<u8>) -> Vec<u8> {
     output
 }
 
-pub fn xor_single_byte(bytes: Vec<u8>, key: u8) -> Vec<u8> {
+pub fn xor_single_byte(bytes: &[u8], key: u8) -> Vec<u8> {
     let mut output = Vec::new();
 
     for byte in bytes.iter() {
@@ -40,7 +35,7 @@ pub fn xor_single_byte(bytes: Vec<u8>, key: u8) -> Vec<u8> {
     output
 }
 
-pub fn xor_repeating(bytes: &[u8], key: Vec<u8>) -> Vec<u8> {
+pub fn xor_repeating(bytes: &[u8], key: &[u8]) -> Vec<u8> {
     let mut output = Vec::new();
     let length = key.len();
 

@@ -1,6 +1,9 @@
 #[cfg(test)]
 mod tests {
-    use crate::{from_hex, into_hex, score::get_score, xor, xor_repeating, xor_single_byte};
+    use crate::{
+        score::get_score,
+        utils::{from_hex, into_hex, xor, xor_repeating, xor_single_byte},
+    };
     use base64::encode;
     use std::str;
 
@@ -22,9 +25,9 @@ mod tests {
         let expected = "746865206b696420646f6e277420706c6179";
 
         let (a_bytes, b_bytes) = (from_hex(a), from_hex(b));
-        let xor = xor(a_bytes, b_bytes);
+        let xor = xor(&a_bytes, &b_bytes);
 
-        assert_eq!(into_hex(xor), expected);
+        assert_eq!(into_hex(&xor), expected);
     }
 
     #[test]
@@ -35,7 +38,7 @@ mod tests {
 
         // The key byte is `88` or `X`
         for (index, i) in (0..255).enumerate() {
-            let xor = xor_single_byte(bytes.clone(), i);
+            let xor = xor_single_byte(&bytes, i);
 
             if let Ok(val) = str::from_utf8(&xor) {
                 println!("{} - {}", index, val);
@@ -62,7 +65,7 @@ mod tests {
             let bytes = from_hex(line);
 
             for i in 0..255 {
-                let xor = xor_single_byte(bytes.clone(), i);
+                let xor = xor_single_byte(&bytes, i);
                 let score = get_score(xor);
                 if score > high_score {
                     high_score = score;
@@ -82,7 +85,7 @@ mod tests {
         println!("{} - {} - {}", high_line_score, high_line_byte, line_num);
 
         let a = from_hex("7b5a4215415d544115415d5015455447414c155c46155f4058455c5b523f");
-        let xor = xor_single_byte(a, 53);
+        let xor = xor_single_byte(&a, 53);
         let b = str::from_utf8(&xor).unwrap();
         println!("{}", b);
         assert!(true);
@@ -93,9 +96,9 @@ mod tests {
         let input = "Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal";
         let key = vec![b'I', b'C', b'E'];
 
-        let xor = xor_repeating(input.as_bytes(), key);
+        let xor = xor_repeating(input.as_bytes(), &key);
         let expected = "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f".to_string();
 
-        assert_eq!(into_hex(xor), expected);
+        assert_eq!(into_hex(&xor), expected);
     }
 }
